@@ -3,13 +3,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout Code') {
-            steps {
-                git branch: 'main',
-                    url: 'https://github.com/shiva-6300/apcpdcl.git'
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
                 dir('shiva') {  
