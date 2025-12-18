@@ -12,7 +12,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                dir('shiva') {   // <-- change 'frontend' to your actual folder
+                dir('shiva') {  
                     sh 'npm install'
                 }
             }
@@ -29,9 +29,14 @@ pipeline {
         stage('Deploy to Nginx') {
             steps {
                 sh '''
-                sudo rm -rf /var/www/html/*
-                sudo cp -r $WORKSPACE/frontend/build/* /var/www/html/
-                sudo chown -R www-data:www-data /var/www/html
+                if [ -d "$WORKSPACE/shiva/build" ]; then
+                    sudo rm -rf /var/www/html/*
+                    sudo cp -r $WORKSPACE/shiva/build/* /var/www/html/
+                    sudo chown -R www-data:www-data /var/www/html
+                else
+                    echo "Build folder not found! Deployment skipped."
+                    exit 1
+                fi
                 '''
             }
         }
@@ -43,4 +48,3 @@ pipeline {
         }
     }
 }
-
