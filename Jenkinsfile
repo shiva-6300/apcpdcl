@@ -12,13 +12,17 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                dir('shiva') {   // <-- change 'frontend' to your actual folder
+                    sh 'npm install'
+                }
             }
         }
 
         stage('Build React App') {
             steps {
-                sh 'npm run build'
+                dir('shiva') {
+                    sh 'npm run build'
+                }
             }
         }
 
@@ -26,7 +30,7 @@ pipeline {
             steps {
                 sh '''
                 sudo rm -rf /var/www/html/*
-                sudo cp -r $WORKSPACE/build/* /var/www/html/
+                sudo cp -r $WORKSPACE/frontend/build/* /var/www/html/
                 sudo chown -R www-data:www-data /var/www/html
                 '''
             }
@@ -39,3 +43,4 @@ pipeline {
         }
     }
 }
+
